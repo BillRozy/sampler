@@ -24,31 +24,35 @@ public class Main {
         myApp.getActivePattern().getTrack(1).connectInstrument("H2Sv2 - THKL - Kick(0004).wav");
         myApp.getActivePattern().getTrack(2).connectInstrument("H2Sv3 - THSL - Snare(0003).wav");
         myApp.getActivePattern().getTrack(3).connectInstrument("H2Sv4 - THHL - HiHat(0006).wav");
-        /*myApp.setPatternActive(secondPattern);
-        myApp.addInstrument(kick);
-        myApp.addInstrument(snare);
-        myApp.addInstrument(hh);
+        myApp.setPatternActive(secondPattern);
+        myApp.getActivePattern().addTrack("kick");
+        myApp.getActivePattern().addTrack("snare");
+        myApp.getActivePattern().getTrack(1).connectInstrument("H2Sv2 - THKL - Kick(0004).wav");
+        myApp.getActivePattern().getTrack(2).connectInstrument("H2Sv3 - THSL - Snare(0003).wav");
         myApp.getPattern(2).getTrack(1).makeHitActive(1,2,5,6,9,10,13,14);
         myApp.getPattern(2).getTrack(2).makeHitActive(3,7,11,15);
-        myApp.getPattern(2).getTrack(3).makeHitActive(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16);*/
-        myApp.play(2);
-        try{Thread.sleep(1000);
+        myApp.setPatternActive(firstPattern);
+        myApp.play();
+        try{Thread.sleep(4000);
         }catch(InterruptedException exc){}
         myApp.stop();
         try{Thread.sleep(2000);
         }catch(InterruptedException exc){}
-        myApp.resume();
+        myApp.play();
         try{Thread.sleep(2000);
         }catch(InterruptedException exc){}
         myApp.stop();
+        myApp.setPatternActive(secondPattern);
         try{Thread.sleep(1000);
         }catch(InterruptedException exc){}
-        // myApp.setPatternActive(secondPattern);
-        myApp.resume();
+         myApp.setPatternActive(secondPattern);
+        myApp.play();
         try{Thread.sleep(10000);
         }catch(InterruptedException exc){}
         myApp.stop();
-        myApp.offSampler();
+        myApp.setPatternActive(firstPattern);
+        myApp.play();
+      //  myApp.offSampler();
     }
 }
 
@@ -69,11 +73,6 @@ class Instrument{
             //В GUI-приложениях следующие 3 строчки не понадобятся
             Thread.sleep(Sampler.getDelay());
             clip.stop();
-
-            long after = System.currentTimeMillis();
-            System.out.println("Thread is: " + Thread.currentThread().getName() + (after-begin) + " State: " + Thread.currentThread().getState()) ;
-
-
         }  catch (InterruptedException exc) {Thread.currentThread().interrupt();}
     }
 
@@ -91,10 +90,6 @@ class Instrument{
     private static File openFile(String url){
         File soundFile = new File(url); //Звуковой файл
         return soundFile;
-    }
-
-    public Clip getClip(){
-        return clip;
     }
 
     //PROPERTIES
@@ -120,21 +115,23 @@ class Sampler{
         isPlaying = false;
     }
 
-    public void play(int repl){
-       // Sampler.getSampler().setReplays(repl);
-      //  for(int i =0; i<repl;i++){
+    public void play(){
+        System.out.println("Начинаю воспроизведение...");
+        setPlaying(true);
         activePattern.playPattern();}
-  //  }
+
 
     public void resume()
     {
         System.out.println("Возобновляю работу сэмплера");
+        setPlaying(true);
         activePattern.resumePattern();
     }
 
 
     public void stop(){
         System.out.println("Trying to stop sampler!");
+        setPlaying(false);
         activePattern.stopPattern();
     }
     public void pause(){}
@@ -194,7 +191,7 @@ class Sampler{
     static private int BPM = 280;
     static private int steps = 16;
     static private int replays = 1;
-    static private boolean isPlaying = true;
+    static private boolean isPlaying = false;
 
 }
 //CLASS Pattern, keeper of tracks
@@ -219,16 +216,16 @@ class Pattern {
     }
     public void playPattern() {
         for (Track track : tracksArray) {
-           if (track.getTrackThread().getState() == Thread.State.NEW || track.getTrackThread().getState() == Thread.State.WAITING) {
-                track.getTrackThread().start();
-               track.requestResume();
+           if (track.getTrackThread().getState() == Thread.State.NEW ) {
+                track.getTrackThread().start();}
+            else track.requestResume(track);
             }
-        }
+
     }
 
     public void resumePattern(){
         for (Track track : tracksArray) {
-            track.requestResume();
+            track.requestResume(track);
         }
     }
 
@@ -236,7 +233,7 @@ class Pattern {
         for (Track track : tracksArray) {
             if(track.getTrackThread().getState() == Thread.State.TIMED_WAITING || track.getTrackThread().getState() == Thread.State.RUNNABLE)
             {
-                track.requestSuspend();
+                track.pause();
                 System.out.println("Current thread: stopped " + track.getTrackThread().getName() + "interuptedVar = " + track);
 
             }
@@ -259,6 +256,7 @@ class Pattern {
          t = new Thread(this);
          name = n;
          System.out.println("Новый поток: " + t) ;
+         //t.start();
      }
      public Thread getTrackThread(){
          return this.t;
@@ -266,11 +264,12 @@ class Pattern {
      public String getTrackThreadName(){
          return this.name;
      }
-     public void requestSuspend() {
-         suspendRequested = true;
+     public void stop(){keepRunning = false;}
+     public void pause() {
+         isPaused = true;
      }
-     public void requestResume(){
-         suspendRequested = false;
+     public synchronized void requestResume(Track track){
+         track.notify();
      }
      public ArrayList<Hit> getHits(){
          return hitsArray;
@@ -289,10 +288,9 @@ class Pattern {
              hitsArray.get(i-1).setActive();
      }
     public void performSound(){
-            for (int i = 0; i < Sampler.getReplays(); i++) {
                 for (Hit hit : hitsArray) {
-                    System.out.println("Проверяю играет ли сэмплер");
-                    if(!suspendRequested) {
+                    //System.out.println("Проверяю играет ли сэмплер");
+                    if(!isPaused) {
                         if (hit.getActive()) {
                             this.connectedInstrument.playSound();
                             System.out.println("Active hit, step number " + hitsArray.indexOf(hit));
@@ -303,26 +301,32 @@ class Pattern {
                         }
                     }
                 }
-            }
     }
      public void run() {
-         while(Sampler.isPlaying()) {
-             if (suspendRequested) {
-             //    System.out.println("Поступил запрос на стоп");
-                 try {Thread.currentThread().sleep(10);}
-
-                  catch (InterruptedException e) {
-                     System.out.println(name + " прерван.");}
+         keepRunning = true;
+         try {
+             while (keepRunning) {
+                 if (isPaused) {
+                     synchronized (this){
+                     // System.out.println("Поступил запрос на стоп");
+                         wait();
+                         isPaused = false;
+                     }
                  }
-             else performSound();
-         }
+                  else performSound();
+             }
+         } catch (Exception e) {
+             System.out.println(name + " прерван.");}
      }
+
+
      //PROPERTIES
      private String name;
      private Thread t;
-     private volatile boolean suspendRequested = false;
+     private boolean isPaused = false;
+     private boolean keepRunning = false;
      private ArrayList<Hit> hitsArray = new ArrayList<>();
-     private Instrument connectedInstrument;
+     private Instrument connectedInstrument = new Instrument("H2Sv4 - THHL - HiHat(0009).wav");
      //INNER CLASS
     public class Hit
     {
