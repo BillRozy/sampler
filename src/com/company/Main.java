@@ -17,43 +17,42 @@ public class Main {
         Sampler myApp = Sampler.getSampler();
         Pattern firstPattern = new Pattern();
         Pattern secondPattern = new Pattern();
-        Instrument kick = new Instrument("H2Sv2 - THKL - Kick(0004).wav");
-        Instrument snare = new Instrument("H2Sv3 - THSL - Snare(0003).wav");
-        Instrument hh = new Instrument("H2Sv4 - THHL - HiHat(0006).wav");
         myApp.addPattern(firstPattern);
         myApp.addPattern(secondPattern);
         myApp.setPatternActive(firstPattern);
-        myApp.addInstrument(kick);
-        myApp.addInstrument(snare);
+        myApp.getActivePattern().addTrack("kick");
+        myApp.getActivePattern().addTrack("snare");
+        myApp.getActivePattern().addTrack("hh");
         myApp.getPattern(1).getTrack(1).makeHitActive(1,5,9,13);
         myApp.getPattern(1).getTrack(2).makeHitActive(3,7,11,15);
-        myApp.setPatternActive(secondPattern);
+        myApp.getPattern(1).getTrack(3).makeHitActive(1,3,5,7,9,11,13,15);
+        myApp.getActivePattern().getTrack(1).connectInstrument("H2Sv2 - THKL - Kick(0004).wav");
+        myApp.getActivePattern().getTrack(2).connectInstrument("H2Sv3 - THSL - Snare(0003).wav");
+        myApp.getActivePattern().getTrack(3).connectInstrument("H2Sv4 - THHL - HiHat(0006).wav");
+        /*myApp.setPatternActive(secondPattern);
         myApp.addInstrument(kick);
         myApp.addInstrument(snare);
         myApp.addInstrument(hh);
         myApp.getPattern(2).getTrack(1).makeHitActive(1,2,5,6,9,10,13,14);
         myApp.getPattern(2).getTrack(2).makeHitActive(3,7,11,15);
-        myApp.getPattern(2).getTrack(3).makeHitActive(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16);
-        myApp.setPatternActive(firstPattern);
+        myApp.getPattern(2).getTrack(3).makeHitActive(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16);*/
         myApp.play(2);
         try{Thread.sleep(1000);
         }catch(InterruptedException exc){};
         myApp.stop();
-        try{Thread.sleep(1000);
+        try{Thread.sleep(2000);
         }catch(InterruptedException exc){};
-
-
-      /*  myApp.resume();
+        myApp.resume();
         try{Thread.sleep(2000);
         }catch(InterruptedException exc){};
         myApp.stop();
         try{Thread.sleep(1000);
         }catch(InterruptedException exc){};
-        myApp.setPatternActive(secondPattern);
-        myApp.play(1);
+       // myApp.setPatternActive(secondPattern);
+        myApp.resume();
         try{Thread.sleep(10000);
-        }catch(InterruptedException exc){};*/
-       // myApp.stop();
+        }catch(InterruptedException exc){};
+        myApp.stop();
         myApp.offSampler();
 
 
@@ -165,16 +164,10 @@ class Sampler{
     public void setPatternActive(Pattern pattern){
         this.activePattern = pattern;
     }
-    public void addInstrument(Instrument instr){
 
-        instruments.add(instr);
-        Track thisTrack = new Track("instr");
-        thisTrack.setConnectedInstrument(instr);
-        thisTrack.makeHits();
-        activePattern.addTrack(thisTrack);
-        thisTrack.getTrackThread().start();
+    public Pattern getActivePattern(){
+        return this.activePattern;
     }
-
 
     static public int getDelay(){
         double dblBPM = (double) BPM;
@@ -226,7 +219,6 @@ class Sampler{
 
 
     private ArrayList<Pattern> patterns = new ArrayList<>();
-    private ArrayList<Instrument> instruments = new ArrayList<>();
     private Pattern activePattern;
     private int currentStep;
     static private int BPM = 280;
@@ -240,28 +232,38 @@ class Sampler{
 
 class Pattern {
     private ArrayList<Track> tracksArray = new ArrayList<>(10);
-    private ArrayList<Thread> threadPool = new ArrayList<>();
     private int trackCounter = 1;
+
+    //test
+
+    public ArrayList<Track> getTracksArray(){
+        return tracksArray;
+    }
+
+    //end test
 
     public Track getTrack(int number) {
         return tracksArray.get(number - 1);
     }
 
 
-    public void addTrack(Track track) {
+    public void addTrack(String name) {
+        Track track = new Track(name);
+        track.makeHits();
         tracksArray.add(track);
         Thread thread = track.getTrackThread();
         thread.setName("Track-" + trackCounter + track.getTrackThreadName() + "  Time: ");
-        threadPool.add(thread);
+       // track.getTrackThread().start();
         trackCounter++;
     }
+
 
     public void playPattern() {
 
 
         for (Track track : tracksArray) {
            if (track.getTrackThread().getState() == Thread.State.NEW || track.getTrackThread().getState() == Thread.State.WAITING) {
-            //  track.getTrackThread().start();
+                track.getTrackThread().start();
                track.requestResume();
             }
         }
@@ -304,22 +306,30 @@ class Pattern {
 
  class Track implements Runnable {
 
-     private String name; // имя потока
+     //test
+
+     public Instrument getConnectedInstrument(){
+         return connectedInstrument;
+     }
+
+     //end test
+
+     private String name;
      private Thread t;
      private volatile boolean suspendRequested = false;
-     private Lock suspendLock = new ReentrantLock();
-     private Condition suspendCondition = suspendLock.newCondition();
      private ArrayList<Hit> hitsArray = new ArrayList<>();
      private Instrument connectedInstrument;
-     public Track(String threadname){
-         name = threadname;
-         t = new Thread(this, name);
+     public Track(String n){
+         t = new Thread(this);
+         name = n;
          System.out.println("Новый поток: " + t) ;
      }
 
      public Thread getTrackThread(){
          return this.t;
      }
+
+
 
      public String getTrackThreadName(){
          return this.name;
@@ -337,8 +347,8 @@ class Pattern {
          return hitsArray;
      }
 
-    public void setConnectedInstrument(Instrument instrument){
-         this.connectedInstrument = instrument;
+    public void connectInstrument(String URL){
+         this.connectedInstrument = new Instrument(URL);
      }
 
 
