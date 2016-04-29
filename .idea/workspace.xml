@@ -11,10 +11,6 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/MyTimer/com/company/Track$Hit.class" afterPath="$PROJECT_DIR$/out/production/MyTimer/com/company/Track$Hit.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/MyTimer/com/company/Track.class" afterPath="$PROJECT_DIR$/out/production/MyTimer/com/company/Track.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/company/Instrument.java" afterPath="$PROJECT_DIR$/src/com/company/Instrument.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/company/Main.java" afterPath="$PROJECT_DIR$/src/com/company/Main.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/company/Sampler.java" afterPath="$PROJECT_DIR$/src/com/company/Sampler.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/company/Track.java" afterPath="$PROJECT_DIR$/src/com/company/Track.java" />
     </list>
     <ignored path="MyTimer.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -499,7 +495,13 @@
       <option name="project" value="LOCAL" />
       <updated>1461924440970</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Current step counting now">
+      <created>1461926935072</created>
+      <option name="number" value="00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1461926935072</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -547,7 +549,8 @@
     <MESSAGE value="Changing patterns done, stop is working excellent now! need to work under pause in currentStep direction, i think" />
     <MESSAGE value="Divided classes now" />
     <MESSAGE value="Metronome added without volume" />
-    <option name="LAST_COMMIT_MESSAGE" value="Metronome added without volume" />
+    <MESSAGE value="Current step counting now" />
+    <option name="LAST_COMMIT_MESSAGE" value="Current step counting now" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
