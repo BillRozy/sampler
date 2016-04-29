@@ -28,9 +28,9 @@ public class Main {
         myApp.getPattern(2).getTrack(2).makeHitActive(3,7,11,15);
         myApp.setPatternActive(firstPattern);
         myApp.play();
-        try{Thread.sleep(4000);
+       try{Thread.sleep(4000);
         }catch(InterruptedException exc){}
-        myApp.stop();
+        myApp.pause();
         try{Thread.sleep(2000);
         }catch(InterruptedException exc){}
         myApp.play();
@@ -44,7 +44,7 @@ public class Main {
         myApp.play();
         try{Thread.sleep(3000);
         }catch(InterruptedException exc){}
-        myApp.stop();
+        myApp.pause();
         myApp.setPatternActive(firstPattern);
         myApp.play();
         try{Thread.sleep(3000);

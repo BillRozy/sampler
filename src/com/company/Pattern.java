@@ -25,7 +25,7 @@ class Pattern {
         Track track = new Track(name);
         tracksArray.add(track);
         Thread thread = track.getTrackThread();
-        thread.setName("Track-" + trackCounter + track.getTrackThreadName() + "  Time: ");
+        thread.setName("Track-" + trackCounter + track.getTrackThreadName());
         // track.getTrackThread().start();
         trackCounter++;
     }
@@ -34,7 +34,7 @@ class Pattern {
         Track metronome = new Metronome();
         tracksArray.add(metronome);
         Thread thread = metronome.getTrackThread();
-        thread.setName("Mettronome");
+        thread.setName("Metronome");
         trackCounter++;
     }
 
@@ -47,23 +47,18 @@ class Pattern {
 
     }
 
-    public void resumePattern(){
-        for (Track track : tracksArray) {
-            track.requestResume(track);
-        }
-    }
 
     public void stopPattern() {
         for (Track track : tracksArray) {
             if(track.getTrackThread().getState() == Thread.State.TIMED_WAITING || track.getTrackThread().getState() == Thread.State.RUNNABLE)
             {
                 track.pause();
-                System.out.println("Current thread: stopped " + track.getTrackThread().getName() + "interuptedVar = " + track);
+                System.out.println("This track: stopped " + track.getTrackThread().getName() + " " + track);
 
             }
         }
     }
     //PROPERTIES
     private ArrayList<Track> tracksArray = new ArrayList<>(10);
-    private int trackCounter = 1;
+    private int trackCounter = 0;
 }

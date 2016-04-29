@@ -6,6 +6,7 @@ import java.util.ArrayList;
  * Created by FD on 28.04.2016.
  */
 // Class-controller of app, singletone
+
 class Sampler{
 
     // Singletone Realization
@@ -26,24 +27,18 @@ class Sampler{
 
     public void play(){
         System.out.println("Начинаю воспроизведение...");
-        setPlaying(true);
         activePattern.playPattern();}
-
-
-    public void resume()
-    {
-        System.out.println("Возобновляю работу сэмплера");
-        setPlaying(true);
-        activePattern.resumePattern();
-    }
-
 
     public void stop(){
         System.out.println("Trying to stop sampler!");
-        setPlaying(false);
+        activePattern.stopPattern();
+        currentStep=1;
+        System.out.println("After stop step is: " + currentStep);
+    }
+    public void pause(){
+        System.out.println("Paused sampler!");
         activePattern.stopPattern();
     }
-    public void pause(){}
     public void addPattern(Pattern patt){
         patterns.add(patt);
     }
@@ -96,7 +91,7 @@ class Sampler{
     //PROPERTIES
     private ArrayList<Pattern> patterns = new ArrayList<>();
     private Pattern activePattern;
-    private int currentStep;
+    private int currentStep = 1;
     private int BPM = 200;
     private int steps = 16;
     private int replays = 1;
