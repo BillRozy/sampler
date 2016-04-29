@@ -22,7 +22,7 @@ class Instrument{
             clip.start(); //Поехали!!!
             //Если не запущено других потоков, то стоит подождать, пока клип не закончится
             //В GUI-приложениях следующие 3 строчки не понадобятся
-            Thread.sleep(Sampler.getDelay());
+            Thread.sleep(Sampler.getSampler().getDelay());
             clip.stop();
         }  catch (InterruptedException exc) {Thread.currentThread().interrupt();}
     }

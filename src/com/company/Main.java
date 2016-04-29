@@ -40,7 +40,6 @@ public class Main {
         myApp.setPatternActive(secondPattern);
         try{Thread.sleep(1000);
         }catch(InterruptedException exc){}
-         myApp.setPatternActive(secondPattern);
         myApp.setBPM(140);
         myApp.play();
         try{Thread.sleep(3000);

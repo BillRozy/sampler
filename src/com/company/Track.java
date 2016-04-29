@@ -41,7 +41,7 @@ class Track implements Runnable {
         this.connectedInstrument = new Instrument(URL);
     }
     public void makeHits(){
-        for(int i=0;i<Sampler.getSteps();i++)
+        for(int i=0;i<Sampler.getSampler().getSteps();i++)
         {
             hitsArray.add(new Hit(false));
         }
@@ -62,10 +62,10 @@ class Track implements Runnable {
             if(!isPaused) {
                 if (hit.getActive()) {
                     this.connectedInstrument.playSound();
-                    System.out.println("Active hit, step number " + hitsArray.indexOf(hit));
+                   // System.out.println("Active hit, step number " + hitsArray.indexOf(hit));
                 } else {
                     try {
-                        Thread.sleep(Sampler.getDelay());
+                        Thread.sleep(Sampler.getSampler().getDelay());
                     } catch (InterruptedException exc) {}
                 }
             }
@@ -92,10 +92,10 @@ class Track implements Runnable {
     //PROPERTIES
     private String name;
     private Thread t;
-    private boolean isPaused = false;
+    protected boolean isPaused = false;
     private boolean keepRunning = false;
-    private ArrayList<Hit> hitsArray = new ArrayList<>();
-    private Instrument connectedInstrument = new Instrument("H2Sv4 - THHL - HiHat(0009).wav");
+    protected ArrayList<Hit> hitsArray = new ArrayList<>();
+    protected Instrument connectedInstrument = new Instrument("H2Sv4 - THHL - HiHat(0009).wav");
     //INNER CLASS
     public class Hit
     {
@@ -117,8 +117,20 @@ class Track implements Runnable {
 class Metronome extends Track{
     public Metronome(){
         super("Metronome");
-        this.makeHits();
         this.makeAllHitsActive();
         this.connectInstrument("Metronome.wav");
     }
+    public void performSound(){
+        for (Hit hit : hitsArray) {
+            //System.out.println("Проверяю играет ли сэмплер");
+            if(!isPaused) {
+                if (hit.getActive()) {
+                    Sampler.getSampler().setCurrentStep(hitsArray.indexOf(hit) + 1);
+                    System.out.println("Current step is: " + Sampler.getSampler().getCurrentStep());
+                    this.connectedInstrument.playSound();
+                }
+            }
+        }
+    }
+
 }

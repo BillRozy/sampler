@@ -56,7 +56,7 @@ class Sampler{
         return this.activePattern;
     }
 
-    static public int getDelay(){
+    public int getDelay(){
         double dblBPM = (double) BPM;
         double delay =  120.0/dblBPM * 500.0;
         return (int) delay;
@@ -66,7 +66,7 @@ class Sampler{
     public void setReplays(int q){
         replays = q;
     }
-    public static int getReplays(){
+    public int getReplays(){
         return replays;
     }
     public void setBPM(int B){
@@ -75,14 +75,14 @@ class Sampler{
     public int getBPM(){
         return BPM;
     }
-    public static void setSteps(int s){
+    public void setSteps(int s){
         steps = s;
     }
-    static public int getSteps(){
+    public int getSteps(){
         return steps;
     }
-    static public boolean isPlaying(){return isPlaying;}
-    static public void setPlaying(boolean t){isPlaying = t;}
+    public boolean isPlaying(){return isPlaying;}
+    public void setPlaying(boolean t){isPlaying = t;}
     public Pattern getPattern(int number){
         return patterns.get(number-1);
     }
@@ -97,9 +97,9 @@ class Sampler{
     private ArrayList<Pattern> patterns = new ArrayList<>();
     private Pattern activePattern;
     private int currentStep;
-    static private int BPM = 280;
-    static private int steps = 16;
-    static private int replays = 1;
-    static private boolean isPlaying = false;
+    private int BPM = 200;
+    private int steps = 16;
+    private int replays = 1;
+    private boolean isPlaying = false;
 
 }
