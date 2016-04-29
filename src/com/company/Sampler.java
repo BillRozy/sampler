@@ -7,16 +7,21 @@ import java.util.ArrayList;
  */
 // Class-controller of app, singletone
 
-class Sampler{
-
+class Sampler {
     // Singletone Realization
+    private static volatile Sampler instance;
 
-    private Sampler(){}
-    private static class SamplerHolder{
-        private final static Sampler instance = new Sampler();
-    }
-    public static Sampler getSampler(){
-        return SamplerHolder.instance;
+    public static Sampler getSampler() {
+        Sampler localInstance = instance;
+        if (localInstance == null) {
+            synchronized (Sampler.class) {
+                localInstance = instance;
+                if (localInstance == null) {
+                    instance = localInstance = new Sampler();
+                }
+            }
+        }
+        return localInstance;
     }
 
     // Methods
