@@ -13,10 +13,12 @@ class Track implements Runnable {
         return connectedInstrument;
     }
     //end test
+    public Track(){}
     public Track(String n){
         t = new Thread(this);
         name = n;
         System.out.println("Новый поток: " + t) ;
+        this.makeHits();
         //t.start();
     }
     public Thread getTrackThread(){
@@ -47,6 +49,12 @@ class Track implements Runnable {
     public void makeHitActive(int... n){
         for(int i : n)
             hitsArray.get(i-1).setActive();
+    }
+
+    public void makeAllHitsActive() {
+        for (Hit hit : hitsArray) {
+            hit.setActive();
+        }
     }
     public void performSound(){
         for (Hit hit : hitsArray) {
@@ -106,3 +114,11 @@ class Track implements Runnable {
     }
 }
 
+class Metronome extends Track{
+    public Metronome(){
+        super("Metronome");
+        this.makeHits();
+        this.makeAllHitsActive();
+        this.connectInstrument("Metronome.wav");
+    }
+}

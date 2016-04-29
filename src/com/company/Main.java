@@ -1,10 +1,5 @@
 package com.company;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-import javax.sound.sampled.*;
-
 public class Main {
     public static void main(String[] args) {
         // write your code here
@@ -46,12 +41,16 @@ public class Main {
         try{Thread.sleep(1000);
         }catch(InterruptedException exc){}
          myApp.setPatternActive(secondPattern);
+        myApp.setBPM(140);
         myApp.play();
         try{Thread.sleep(3000);
         }catch(InterruptedException exc){}
         myApp.stop();
         myApp.setPatternActive(firstPattern);
         myApp.play();
+        try{Thread.sleep(3000);
+        }catch(InterruptedException exc){}
+       myApp.stop();
       //  myApp.offSampler();
     }
 }

@@ -13,18 +13,31 @@ class Pattern {
         return tracksArray;
     }
     //end test
+
+    //CONSTUCTOR
+    public Pattern(){
+        this.addMetronome();
+    }
     public Track getTrack(int number) {
-        return tracksArray.get(number - 1);
+        return tracksArray.get(number);
     }
     public void addTrack(String name) {
         Track track = new Track(name);
-        track.makeHits();
         tracksArray.add(track);
         Thread thread = track.getTrackThread();
         thread.setName("Track-" + trackCounter + track.getTrackThreadName() + "  Time: ");
         // track.getTrackThread().start();
         trackCounter++;
     }
+
+    public void addMetronome(){
+        Track metronome = new Metronome();
+        tracksArray.add(metronome);
+        Thread thread = metronome.getTrackThread();
+        thread.setName("Mettronome");
+        trackCounter++;
+    }
+
     public void playPattern() {
         for (Track track : tracksArray) {
             if (track.getTrackThread().getState() == Thread.State.NEW ) {

@@ -69,10 +69,10 @@ class Sampler{
     public static int getReplays(){
         return replays;
     }
-    public static void setBPM(int B){
+    public void setBPM(int B){
         BPM = B;
     }
-    static public int getBPM(){
+    public int getBPM(){
         return BPM;
     }
     public static void setSteps(int s){
