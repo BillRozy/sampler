@@ -28,26 +28,26 @@ public class Main {
         myApp.getPattern(2).getTrack(2).makeHitActive(3,7,11,15);
         myApp.setPatternActive(firstPattern);
         myApp.play();
-       try{Thread.sleep(4000);
+       try{Thread.sleep(8000);
         }catch(InterruptedException exc){}
         myApp.pause();
-        try{Thread.sleep(2000);
+        try{Thread.sleep(4000);
         }catch(InterruptedException exc){}
         myApp.play();
-        try{Thread.sleep(2000);
+        try{Thread.sleep(4000);
         }catch(InterruptedException exc){}
         myApp.stop();
         myApp.setPatternActive(secondPattern);
-        try{Thread.sleep(1000);
+        try{Thread.sleep(4000);
         }catch(InterruptedException exc){}
         myApp.setBPM(140);
         myApp.play();
-        try{Thread.sleep(3000);
+        try{Thread.sleep(4000);
         }catch(InterruptedException exc){}
         myApp.pause();
         myApp.setPatternActive(firstPattern);
         myApp.play();
-        try{Thread.sleep(3000);
+        try{Thread.sleep(4000);
         }catch(InterruptedException exc){}
        myApp.stop();
       //  myApp.offSampler();
