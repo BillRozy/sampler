@@ -12,6 +12,7 @@ class Instrument{
     public Instrument(String urlToSound){
         this.soundBank = openFile(urlToSound);
         clip = makeClip();
+        volumeC = (FloatControl)clip.getControl(FloatControl.Type.MASTER_GAIN);
     }
 
     public void playSound()
@@ -25,6 +26,14 @@ class Instrument{
             Thread.sleep(Sampler.getSampler().getDelay());
             clip.stop();
         }  catch (InterruptedException exc) {Thread.currentThread().interrupt();}
+    }
+
+    public void setVolume(float x) {
+        if (x<0) x = 0;
+        if (x>1) x = 1;
+        float min = volumeC.getMinimum();
+        float max = volumeC.getMaximum();
+        volumeC.setValue((max-min)*x+min);
     }
 
     private Clip makeClip() {
@@ -46,4 +55,5 @@ class Instrument{
     //PROPERTIES
     private File soundBank = null;
     private Clip clip = null;
+    private FloatControl volumeC = null;
 }

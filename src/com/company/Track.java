@@ -118,6 +118,7 @@ class Metronome extends Track{
         super("Metronome");
         this.makeAllHitsActive();
         this.connectInstrument("Metronome.wav");
+        this.connectedInstrument.setVolume(0);
     }
     public void performSound(int step){
         System.out.println("Вызван performSound!");
